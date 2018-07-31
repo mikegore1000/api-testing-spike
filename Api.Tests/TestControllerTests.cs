@@ -10,6 +10,7 @@ namespace Api.Tests
 {
     public class TestControllerTests
     {
+        // With standard factory - the DI container services need to be overridden on a per-test basis
         [Fact]
         public async Task Test()
         {
@@ -19,6 +20,7 @@ namespace Api.Tests
                 builder.ConfigureTestServices(services =>
                 {
                     services.AddSingleton<IGreetingService, FakeGreetingService>();
+                    services.AddSingleton<IDatabase, FakeDatabase>();
                 });
             });
 
@@ -31,6 +33,7 @@ namespace Api.Tests
 
 
 
+        // Proves that this will only override the services here rather than everything in the container as the fake database is still used
         [Fact]
         public async Task TestWithApiFactory()
         {
@@ -55,10 +58,20 @@ namespace Api.Tests
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
+
+            // This ConfigureServices won't override dependencies setup in the Startup class (i.e. Startup will replace them and therefore the ProperGreetingService is used) - need to use ConfigureTestServices for that
             builder.ConfigureServices(services =>
             {
                 services.AddSingleton<IGreetingService, AnotherFakeGreetingService>();
+                services.AddSingleton<IDatabase, FakeDatabase>(); // This is used as it isn't defined
             });
+        }
+    }
+
+    public class FakeDatabase : IDatabase
+    {
+        public void Save()
+        {
         }
     }
 

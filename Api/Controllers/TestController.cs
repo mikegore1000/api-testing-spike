@@ -7,15 +7,19 @@ namespace Api.Controllers
     public class TestController : Controller
     {
         private readonly IGreetingService greetingService;
+        private readonly IDatabase database;
 
-        public TestController(IGreetingService greetingService)
+        public TestController(IGreetingService greetingService, IDatabase database)
         {
             this.greetingService = greetingService;
+            this.database = database;
         }
 
         [HttpGet]
         public IActionResult Get()
         {
+            database.Save();
+
             return Ok(greetingService.GetGreeting());
         }
     }

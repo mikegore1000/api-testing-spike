@@ -40,6 +40,11 @@ namespace Api
         }
     }
 
+    public interface IDatabase
+    {
+        void Save();
+    }
+
     public interface IGreetingService
     {
         string GetGreeting();
