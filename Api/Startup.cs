@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using FluentValidation.AspNetCore;
+using SimpleEventStore;
+using SimpleEventStore.InMemory;
 
 namespace Api
 {
@@ -20,6 +22,7 @@ namespace Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IGreetingService, ProperGreetingService>();
+            services.AddSingleton(new EventStore(new InMemoryStorageEngine()));
 
             services.AddMvc()
                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<TransactionAmountValidator>());
