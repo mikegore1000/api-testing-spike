@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Api.Contracts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using FluentValidation.AspNetCore;
 
 namespace Api
 {
@@ -25,7 +21,8 @@ namespace Api
         {
             services.AddSingleton<IGreetingService, ProperGreetingService>();
 
-            services.AddMvc();
+            services.AddMvc()
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<TransactionAmountValidator>());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
